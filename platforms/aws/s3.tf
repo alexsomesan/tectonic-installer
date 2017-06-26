@@ -22,7 +22,7 @@ resource "aws_s3_bucket" "tectonic" {
 # Bootkube / Tectonic assets
 resource "aws_s3_bucket_object" "tectonic-assets" {
   bucket = "${var.tectonic_aws_external_assets_bucket == "" ? join(" ", aws_s3_bucket.tectonic.*.id) : var.tectonic_aws_external_assets_bucket}"
-  key    = "assets.zip"
+  key    = "${var.tectonic_aws_external_assets_bucket == "" ? "" : "${var.tectonic_cluster_name}.${var.tectonic_base_domain}/"}assets.zip"
   source = "${data.archive_file.assets.output_path}"
   acl    = "private"
 
@@ -41,7 +41,7 @@ resource "aws_s3_bucket_object" "tectonic-assets" {
 # kubeconfig
 resource "aws_s3_bucket_object" "kubeconfig" {
   bucket  = "${var.tectonic_aws_external_assets_bucket == "" ? join(" ", aws_s3_bucket.tectonic.*.id) : var.tectonic_aws_external_assets_bucket}"
-  key     = "kubeconfig"
+  key     = "${var.tectonic_aws_external_assets_bucket == "" ? "" : "${var.tectonic_cluster_name}.${var.tectonic_base_domain}/"}kubeconfig"
   content = "${module.bootkube.kubeconfig}"
   acl     = "private"
 
