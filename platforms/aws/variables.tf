@@ -267,3 +267,12 @@ Example:
  * Role Name = tectonic-installer
 EOF
 }
+
+variable "tectonic_aws_external_assets_bucket" {
+  type    = "string"
+  default = ""
+
+  description = <<EOF
+(optional) Name of an existing S3 bucket where assets should be pushed to be consumed by booting master instances.
+EOF
+}

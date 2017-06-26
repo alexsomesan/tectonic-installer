@@ -3,6 +3,8 @@ data "aws_region" "current" {
 }
 
 resource "aws_s3_bucket" "tectonic" {
+  count = "${var.tectonic_aws_external_assets_bucket == "" ? 1 : 0}"
+
   # Buckets must start with a lower case name and are limited to 63 characters,
   # so we prepende the letter 'a' and use the md5 hex digest for the case of a long domain
   # leaving 29 chars for the cluster name.
@@ -19,7 +21,7 @@ resource "aws_s3_bucket" "tectonic" {
 
 # Bootkube / Tectonic assets
 resource "aws_s3_bucket_object" "tectonic-assets" {
-  bucket = "${aws_s3_bucket.tectonic.bucket}"
+  bucket = "${var.tectonic_aws_external_assets_bucket == "" ? join(" ", aws_s3_bucket.tectonic.*.id) : var.tectonic_aws_external_assets_bucket}"
   key    = "assets.zip"
   source = "${data.archive_file.assets.output_path}"
   acl    = "private"
@@ -38,7 +40,7 @@ resource "aws_s3_bucket_object" "tectonic-assets" {
 
 # kubeconfig
 resource "aws_s3_bucket_object" "kubeconfig" {
-  bucket  = "${aws_s3_bucket.tectonic.bucket}"
+  bucket  = "${var.tectonic_aws_external_assets_bucket == "" ? join(" ", aws_s3_bucket.tectonic.*.id) : var.tectonic_aws_external_assets_bucket}"
   key     = "kubeconfig"
   content = "${module.bootkube.kubeconfig}"
   acl     = "private"
