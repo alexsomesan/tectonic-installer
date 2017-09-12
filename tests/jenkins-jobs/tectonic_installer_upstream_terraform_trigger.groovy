@@ -16,7 +16,7 @@ job("triggers/upstream-terraform-trigger") {
   }
 
   parameters {
-    stringParam('builder_image', 'quay.io/coreos/tectonic-builder:v1.36-upstream-terraform', 'tectonic-builder docker image with upstream Terraform')
+    stringParam('builder_image', 'quay.io/coreos/tectonic-builder:v1.39', 'tectonic-builder docker image with upstream Terraform')
   }
 
   steps {
